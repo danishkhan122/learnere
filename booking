@@ -1,0 +1,21 @@
+package HatfieldJuniorSwimmingSchool;
+
+public class Boooking {
+    private Learnerr learnerr;
+    private Lesson lesson;
+    private Boooking status;
+
+    public Boooking(Learnerr learnerr, Lesson lesson) {
+        this.learnerr = learnerr;
+        this.lesson = lesson;
+     
+
+        // Add this booking to the learner's list of bookings
+        learnerr.addBoooking(this);
+    }
+
+    // Getter methods
+    public Lesson getLesson() {
+        return lesson;
+    }
+}
