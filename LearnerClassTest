@@ -1,0 +1,19 @@
+package HatfieldJuniorSwimmingSchool;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+
+
+class LearnerTest {
+    @Test
+    void testSetGradeLevel() {
+        // Create a learner object
+        Learner learner = new Learner();
+        
+        // Set grade level
+        learner.setGradeLevel(3);
+        
+        // Check if grade level is set correctly
+        assertEquals(3, learner.getGradeLevel());
+    }
+}
