@@ -1,0 +1,43 @@
+package HatfieldJuniorSwimmingSchool;
+
+public class Lessson {
+    private String day;
+    private String time;
+    private String grade;
+    private String coach;
+    private int availableSlots;
+
+    // Constructor
+    public Lessson(String day, String time, String grade, String coach, int availableSlots) {
+        this.day = day;
+        this.time = time;
+        this.grade = grade;
+        this.coach = coach;
+        this.availableSlots = availableSlots;
+    }
+
+    // Getter methods
+    public String getDay() {
+        return day;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public String getGrade() {
+        return grade;
+    }
+
+    public String getCoach() {
+        return coach;
+    }
+
+    public int getAvailableSlots() {
+        return availableSlots;
+    }
+
+    // Other methods specific to your implementation
+
+    // For simplicity, you might not need all these methods, adjust based on your requirements
+}
