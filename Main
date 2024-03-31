@@ -1,0 +1,726 @@
+package HatfieldJuniorSwimmingSchool;
+
+import java.util.*;
+
+class Learner {
+    String name;
+    String gender;
+    int age;
+    String emergencyContact;
+    int gradeLevel;
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+    
+    public void setGradeLevel(int gradeLevel) {
+        this.gradeLevel = gradeLevel;
+    }
+        
+    public void setEmergencyContact(String emergencyContact) {
+        this.emergencyContact = emergencyContact;
+    }
+    
+    public void setAge(int age) {
+        this.age = age;
+    }
+    public int getGradeLevel() {
+        return gradeLevel;
+    }
+
+    public String getName() {
+        return name;
+    }
+    
+
+}
+
+
+class Coach {
+    String name;
+
+    // Constructor
+    public Coach() {
+        // Default constructor
+    }
+
+    // Getter and setter for the name field
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Other methods as needed
+}
+
+class Lesson {
+    String day;
+    String timeSlot;
+    int maxCapacity;
+    Coach coach;
+    int gradeLevel;
+    List<Learner> bookedLearners;
+    List<Integer> ratings;
+
+    public int getGradeLevel() {
+        return gradeLevel;
+    }
+
+    public String getTimeSlot() {
+        return timeSlot;
+    }
+
+    public void displayRatingsForLesson() {
+        System.out.println("Ratings for Lesson on " + day + " at " + timeSlot + ":");
+        if (ratings.isEmpty()) {
+            System.out.println("No ratings available.");
+        } else {
+            System.out.println("Average Rating: " + getAverageRating());
+            System.out.println("Individual Ratings: " + ratings);
+        }
+    }
+    public List<Learner> getBookedLearners() {
+        return bookedLearners;
+    }
+
+
+    public String getDay() {
+        return day;
+    }
+
+    public Lesson() {
+        this.bookedLearners = new ArrayList<>();
+        this.ratings = new ArrayList<>();
+    }
+    public void addRating(int rating) {
+        ratings.add(rating);
+    }public double getAverageRating() {
+        if (ratings.isEmpty()) {
+            return 0.0;
+        }
+
+        int sum = 0;
+        for (int rating : ratings) {
+            sum += rating;
+        }
+
+        return (double) sum / ratings.size();
+    }
+
+    
+ 
+
+    public boolean isLearnerBooked(Learner learner) {
+        return bookedLearners.contains(learner);
+    }
+
+    public int getVacancies() {
+        return maxCapacity - bookedLearners.size();
+    }
+
+    public void bookLearner(Learner learner) {
+        bookedLearners.add(learner);
+    }
+
+    public void cancelBooking(Learner learner) {
+        bookedLearners.remove(learner);
+    }
+}
+ 
+class ReportGenerator {
+
+	 public static void generateLearnerReport(List<Learner> learners, List<Lesson> timetable) {
+	        System.out.println("Learner Report after Four Weeks:");
+	        System.out.println("Generate Learner Report:");
+	 
+	        
+	        for (Learner learner : learners) {
+	            int bookedCount = 0;
+	            int cancelledCount = 0;
+	            int attendedCount = 0;
+
+	            for (Lesson lesson : timetable) {
+	                if (lesson.isLearnerBooked(learner)) {
+	                    bookedCount++;
+	                    if (lesson.ratings.size() > 0) {
+	                        attendedCount++;
+	                    }
+	                } else if (lesson.ratings.contains(learner)) {
+	                    cancelledCount++;
+	                }
+	            }
+
+	            System.out.println("Learner: " + learner.name);
+	            System.out.println("Booked Lessons: " + bookedCount);
+	            System.out.println("Cancelled Lessons: " + cancelledCount);
+	            System.out.println("Attended Lessons: " + attendedCount);
+	            System.out.println("-------------------------------");
+	        }
+	    }
+	 public static void generateCoachReport(List<Coach> coaches, List<Lesson> timetable) {
+		    System.out.println("Coach Report after Four Weeks:");
+
+		    for (Coach coach : coaches) {
+		        double totalRating = 0;
+		        int ratedLessons = 0;
+		        int totalLessons = 0;
+
+		        for (Lesson lesson : timetable) {
+		            if (lesson.coach != null && lesson.coach.equals(coach)) {
+		                totalLessons++;
+		                if (lesson.ratings.size() > 0) {
+		                    totalRating += lesson.getAverageRating();
+		                    ratedLessons++;
+		                }
+		            }
+		        }
+
+		        double averageRating = (ratedLessons > 0) ? totalRating / ratedLessons : 0;
+
+		        System.out.println("Coach: " + coach.name);
+		        System.out.println("Total Lessons Coached: " + totalLessons);
+		        System.out.println("Lessons with Ratings: " + ratedLessons);
+		        System.out.println("Average Rating: " + averageRating);
+		        System.out.println("-------------------------------");
+		    }
+		}
+
+}
+class SwimmingSchool {
+	
+	private static void changeCancelBooking(SwimmingSchool swimmingSchool, Scanner scanner) {
+	    System.out.print("Enter learner name: ");
+	    String learnerName = scanner.next();
+
+	    Learner learner = swimmingSchool.findLearnerByName(learnerName);
+
+	    if (learner == null) {
+	        System.out.println("Learner not found. Please check the name and try again.");
+	        return;
+	    }
+
+	    System.out.print("Enter the day of the lesson: ");
+	    String lessonDay = scanner.next();
+
+	    Lesson lesson = swimmingSchool.findLessonByDay(lessonDay);
+
+	    if (lesson == null) {
+	        System.out.println("Lesson not found.");
+	        return;
+	    }
+
+	    boolean bookingChanged = false;
+
+	    while (!bookingChanged) {
+	        System.out.println("1. Change booking");
+	        System.out.println("2. Cancel booking");
+	        System.out.print("Enter your choice: ");
+	        int choice = scanner.nextInt();
+
+	        switch (choice) {
+	            case 1:
+	                // Change booking
+	                System.out.println("Enter new details:");
+	                System.out.print("Enter new day of the lesson: ");
+	                String newLessonDay = scanner.next();
+	                System.out.print("Enter new time slot: ");
+	                String newTimeSlot = scanner.next();
+
+	                // Update the lesson details
+	                lesson.day = newLessonDay;
+	                lesson.timeSlot = newTimeSlot;
+
+	                System.out.println("Booking changed successfully!");
+	                bookingChanged = true; // Exit the loop after changing the booking
+	                break;
+	            case 2:
+	                // Cancel booking
+	                swimmingSchool.cancelBooking(learner, lesson);
+	                System.out.println("Booking canceled successfully!");
+	                bookingChanged = true; // Exit the loop after canceling the booking
+	                break;
+	            default:
+	                System.out.println("Invalid choice. Please enter 1 or 2.");
+	        }
+	    }
+	}
+
+	public void cancelBooking(Learner learner, Lesson lesson) {
+	    if (lesson.isLearnerBooked(learner)) {
+	        lesson.bookedLearners.remove(learner);
+	        learner.setGradeLevel(Math.max(learner.getGradeLevel() - 1, 1)); // Update learner's grade level
+	    } else {
+	        System.out.println("Cancellation failed. Learner is not booked for this lesson.");
+	    }
+	}
+	public void attendLesson(Learner learner, Lesson lesson) {
+	    if (lesson.isLearnerBooked(learner)) {
+	        System.out.println(learner.name + " attended the lesson on " + lesson.day + " at " + lesson.timeSlot);
+	    } else {
+	        System.out.println("Attendance recording failed. Learner is not booked for this lesson.");
+	    }
+	}
+	public int getRatingFromUser() {
+        Scanner scanner = new Scanner(System.in);
+        int rating = 0;
+
+        while (true) {
+            System.out.print("Enter a numerical rating (1-5): ");
+            if (scanner.hasNextInt()) {
+                rating = scanner.nextInt();
+                if (rating >= 1 && rating <= 5) {
+                    break;
+                } else {
+                    System.out.println("Invalid rating. Please enter a rating between 1 and 5.");
+                }
+            } else {
+                System.out.println("Invalid input. Please enter a valid integer.");
+                scanner.nextLine(); // Consume the invalid input to avoid an infinite loop
+            }
+        }
+
+        return rating;
+    }
+
+	
+    List<Learner> learners;
+    List<Coach> coaches;
+    List<Lesson> timetable;
+    public void submitReview(Learner learner, Lesson lesson, int rating) {
+        if (lesson.isLearnerBooked(learner)) {
+            lesson.addRating(rating);
+            System.out.println("Review submitted successfully.");
+        } else {
+            System.out.println("Review submission failed. Learner is not booked for this lesson.");
+        }}
+  
+        public void displayRatingsForLesson(Lesson lesson) {
+            lesson.displayRatingsForLesson();
+        
+    }
+
+    
+    public SwimmingSchool() {
+        this.learners = new ArrayList<>();
+        this.coaches = new ArrayList<>();
+        this.timetable = new ArrayList<>();
+    }
+    
+    
+    private boolean hasDuplicateBooking(Learner learner, Lesson lesson) {
+        for (Lesson l : timetable) {
+            if (l.isLearnerBooked(learner) && !l.equals(lesson)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    
+    public Lesson findLessonByDay(String day) {
+        return timetable.stream()
+                .filter(lesson -> lesson.day.equalsIgnoreCase(day))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Learner findLearnerByName(String learnerName) {
+        return learners.stream()
+                .filter(learner -> learner.name.equalsIgnoreCase(learnerName))
+                .findFirst()
+                .orElse(null);
+    }
+    
+    public void initializeTimetable() {
+        // Create the timetable based on the given requirements
+        timetable = new ArrayList<>();
+
+        // Days
+        String[] days = {"Monday", "Wednesday", "Friday", "Saturday"};
+
+        // Time slots
+        String[] timeSlots = {"4-5pm", "5-6pm", "6-7pm", "2-3pm", "3-4pm"};
+
+        // Sample coaches
+        Coach coach1 = new Coach();
+        coach1.setName("Helen");
+
+        Coach coach2 = new Coach();
+        coach2.setName("John");
+
+        int coachIndex = 0; // Used to alternate between coaches
+
+        for (String day : days) {
+            for (String timeSlot : timeSlots) {
+                Lesson lesson = new Lesson();
+                lesson.day = day;
+                lesson.timeSlot = timeSlot;
+                lesson.maxCapacity = 4;
+                lesson.bookedLearners = new ArrayList<>();
+                lesson.gradeLevel = 1; // Set a default grade level for now
+                lesson.coach = (coachIndex % 2 == 0) ? coach1 : coach2; // Alternate between coaches
+                timetable.add(lesson);
+                coachIndex++;
+            }
+        }
+    }
+
+    public void displayTimetableByLesson(Lesson lesson) {
+        System.out.println("Time: " + lesson.timeSlot +
+                ", Capacity: " + lesson.maxCapacity + ", Vacancies: " + lesson.getVacancies());
+    }
+    public void displayTimetable() {
+        System.out.println("Timetable:");
+        for (Lesson lesson : timetable) {
+            System.out.println("Day: " + lesson.day + ", Time: " + lesson.timeSlot +
+                    ", Capacity: " + lesson.maxCapacity + ", Vacancies: " + lesson.getVacancies());
+        }
+    }
+
+    public void viewTimetableByDay(String chosenDay) {
+        System.out.println("Timetable for " + chosenDay + ":");
+        for (Lesson lesson : timetable) {
+        	if (lesson.day.equalsIgnoreCase(chosenDay)) {
+
+                displayLessonDetails(lesson);
+            }
+        }
+    }
+
+ 
+    
+    public void viewTimetableByGrade(int chosenGrade) {
+        System.out.println("Timetable for Grade " + chosenGrade + ":");
+        for (Lesson lesson : timetable) {
+            if (lesson.gradeLevel == chosenGrade) {
+                displayLessonDetails(lesson);
+            }
+        }
+    }
+
+    public void viewTimetableByCoach(String coachName) {
+        System.out.println("Timetable for Coach " + coachName + ":");
+
+        for (Lesson lesson : timetable) {
+            if (lesson.coach != null && lesson.coach.name.equalsIgnoreCase(coachName)) {
+                displayLessonDetails(lesson);
+            }
+        }
+    }
+
+    public void bookLesson(Learner learner, Lesson lesson) {
+        if (lesson.getVacancies() > 0) {
+            Learner foundLearner = findLearnerByName(learner.getName());
+
+            if (foundLearner != null) {
+                if (lesson.getGradeLevel() == foundLearner.getGradeLevel() || lesson.getGradeLevel() == foundLearner.getGradeLevel() + 1) {
+                    if (!hasDuplicateBooking(foundLearner, lesson)) {
+                        lesson.getBookedLearners().add(foundLearner);
+                        foundLearner.setGradeLevel(Math.min(foundLearner.getGradeLevel() + 1, 5)); // Update learner's grade level
+                        System.out.println(foundLearner.getName() + " booked a lesson on " + lesson.getDay() + " at " + lesson.getTimeSlot());
+                    } else {
+                        System.out.println("Booking failed. Learner already booked for another lesson at the same time.");
+                    }
+                }
+            } else {
+                System.out.println("Learner not found.");
+            }
+        } else {
+            System.out.println("Booking failed. No vacancies available.");
+        }
+    }
+
+    public void displayLessonDetails(Lesson lesson) {
+        System.out.println("Time: " + lesson.timeSlot +
+                ", Capacity: " + lesson.maxCapacity + ", Vacancies: " + lesson.getVacancies());
+    }
+
+    // Sample method to add a new learner to the system
+    public void addNewLearner(String name, String gender, int age, String emergencyContact, int gradeLevel) {
+        Learner learner = new Learner();
+        learner.name = name;
+        learner.gender = gender;
+        learner.age = age;
+        learner.emergencyContact = emergencyContact;
+        learner.gradeLevel = gradeLevel;
+
+        learners.add(learner);
+    }
+}
+
+public class Main {
+
+	
+	private static String inputCoachName(Scanner scanner) {
+	    System.out.print("Enter coach's name: ");
+	    return scanner.nextLine();
+	}
+	
+    private static final int MIN_GRADE_LEVEL = 1;
+    private static final int MAX_GRADE_LEVEL = 5;
+    private static void submitReview(SwimmingSchool swimmingSchool, Scanner scanner) {
+        System.out.print("Enter learner name: ");
+        String learnerName = scanner.nextLine();
+
+        Learner learner = swimmingSchool.findLearnerByName(learnerName);
+
+     
+        System.out.print("Enter the day of the lesson: ");
+        String lessonDay = scanner.next();
+
+        Lesson lesson = swimmingSchool.findLessonByDay(lessonDay);
+
+        if (lesson == null) {
+            System.out.println("Lesson not found.");
+            return;
+        } 
+
+        System.out.print("Enter a numerical rating (1-5): ");
+        int rating = scanner.nextInt();
+
+        if (rating < 1 || rating > 5) {
+            System.out.println("Invalid rating. Please enter a rating between 1 and 5.");
+            return;
+        }
+
+        swimmingSchool.submitReview(learner, lesson, rating);
+    }
+ // ... (existing code)
+
+
+    	public static void main(String[] args) {
+    	    // Instantiate and initialize the SwimmingSchool object
+    	    SwimmingSchool swimmingSchool = new SwimmingSchool();
+    	    swimmingSchool.initializeTimetable();
+
+    	    // Sample: Add a new learner to the system
+    	    swimmingSchool.addNewLearner("John Doe", "Male", 8, "123-456-7890", 1);
+    	    swimmingSchool.addNewLearner("Alex Doe", "Male", 11, "123-656-8890", 2);
+
+    	    Scanner scanner = new Scanner(System.in);
+    	    boolean exitProgram = false;
+
+    	    while (!exitProgram) {
+    	        try {
+    	            System.out.println("\nOptions:");
+    	            System.out.println("1. Book a lesson");
+    	            System.out.println("2. View timetable by day");
+    	            System.out.println("3. View timetable by grade");
+    	            System.out.println("4. View timetable by coach");
+    	            System.out.println("5. Submit a review");
+    	            System.out.println("6. View ratings for a lesson");
+    	            System.out.println("7. Change/Cancel a booking");
+    	            System.out.println("8. Attend a swimming lesson");
+    	            System.out.println("9. Monthly learner report");
+    	            System.out.println("10. Monthly coach report");
+    	            
+    	            System.out.println("11. Exit");
+    	            System.out.print("Enter your choice: ");
+    	            int choice = scanner.nextInt();
+                switch (choice) {
+                    case 1:
+                        // Book a lesson
+                        bookLesson(swimmingSchool, scanner);
+                        break;
+                    case 2:
+                        // View timetable by day
+                        System.out.print("Enter the day: ");
+                        String day = scanner.next();
+                        swimmingSchool.viewTimetableByDay(day);
+                        break;
+                        
+                        
+                    case 3:
+                        // View timetable by grade
+                        System.out.print("Enter the grade: ");
+                        int grade = scanner.nextInt();
+                        if (grade >= MIN_GRADE_LEVEL && grade <= MAX_GRADE_LEVEL) {
+                            swimmingSchool.viewTimetableByGrade(grade);
+                        } else {
+                            System.out.println("Invalid grade level. Please enter a valid grade level (1-5).");
+                        }
+                        break;
+                    case 4:
+                        // View timetable by coach
+                        System.out.print("Enter the coach's name: ");
+                        String coachName = scanner.next();
+                        swimmingSchool.viewTimetableByCoach(coachName);
+                        break;
+                    case 5:
+                        // Submit a review
+                        submitReview(swimmingSchool, scanner);
+                        break;
+                    case 6:
+                        // View ratings for a lesson
+                        System.out.print("Enter the day of the lesson: ");
+                        String lessonDay = scanner.next();
+                        Lesson lesson = swimmingSchool.findLessonByDay(lessonDay);
+
+                        if (lesson == null) {
+                            System.out.println("Lesson not found.");
+                        } else {
+                            swimmingSchool.displayRatingsForLesson(lesson);
+                        }
+                        break;
+                    case 7:
+                        // Change/Cancel a booking
+                        changeCancelBooking(swimmingSchool, scanner);
+                        break;
+                    case 8:
+                        // Attend a swimming lesson
+                        attendSwimmingLesson(swimmingSchool, scanner);
+                        break;
+                    case 9:
+                        // Monthly learner report
+                        ReportGenerator.generateLearnerReport(swimmingSchool.learners, swimmingSchool.timetable);
+                        break;
+                    case 10:
+                        // Monthly coach report
+                    	  ReportGenerator.generateCoachReport(swimmingSchool.coaches, swimmingSchool.timetable);
+
+                      
+                        break;
+                    case 11:
+                        // Exit the program
+                        System.out.println("Exiting program. Goodbye!");
+                        exitProgram = true;
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please enter a valid option.");
+                }
+
+            } catch (InputMismatchException e) {
+                System.out.println("Invalid input. Please enter a valid integer.");
+                scanner.nextLine(); // Consume the invalid input to avoid an infinite loop
+            }
+
+            // Display the updated timetable after each iteration
+            if (!exitProgram) {
+         
+            }
+        }
+    }
+    	private static void changeCancelBooking(SwimmingSchool swimmingSchool, Scanner scanner) {
+    	    System.out.print("Enter learner name: ");
+    	    String learnerName = scanner.next();
+
+    	    Learner learner = swimmingSchool.findLearnerByName(learnerName);
+
+    	    if (learner == null) {
+    	        System.out.println("Learner not found. Please check the name and try again.");
+    	        return; // Return from the method if the learner is not found
+    	    }
+
+    	    System.out.print("Enter the day of the lesson: ");
+    	    String lessonDay = scanner.next();
+
+    	    Lesson lesson = swimmingSchool.findLessonByDay(lessonDay);
+
+    	    if (lesson == null) {
+    	        System.out.println("Lesson not found.");
+    	        return; // Return from the method if the lesson is not found
+    	    }
+
+    	    System.out.println("1. Change booking");
+    	    System.out.println("2. Cancel booking");
+    	    System.out.print("Enter your choice: ");
+    	    int choice = scanner.nextInt();
+
+    	    switch (choice) {
+    	        case 1:
+    	            // Change booking
+    	            swimmingSchool.bookLesson(learner, lesson);
+    	            System.out.println("Booking changed successfully!");
+    	            break;
+    	        case 2:
+    	            // Cancel booking
+    	            swimmingSchool.cancelBooking(learner, lesson);
+    	            System.out.println("Booking canceled successfully!");
+    	            break;
+    	        default:
+    	            System.out.println("Invalid choice. Please enter 1 or 2.");
+    	    }
+    	}
+    private static void attendSwimmingLesson(SwimmingSchool swimmingSchool, Scanner scanner) {
+        System.out.print("Enter learner name: ");
+        String learnerName = scanner.next();
+
+        Learner learner = swimmingSchool.findLearnerByName(learnerName);
+
+        if (learner == null) {
+            // Create a dummy learner
+            learner = new Learner();
+            learner.setName("Dummy Learner");
+            learner.setGender("Male");
+            learner.setAge(10); // Set age as desired
+            learner.setEmergencyContact("N/A");
+            learner.setGradeLevel(1); // Set grade level as desired
+        }
+
+        // Consume the newline character left in the buffer
+        scanner.nextLine();
+
+        System.out.print("Enter the day of the lesson: ");
+        String lessonDay = scanner.next();
+
+        Lesson lesson = swimmingSchool.findLessonByDay(lessonDay);
+
+        swimmingSchool.attendLesson(learner, lesson);
+        System.out.println("Attendance recorded successfully!");
+    }
+
+    
+    private static void bookLesson(SwimmingSchool swimmingSchool, Scanner scanner) {
+        System.out.println("Enter learner details:");
+
+        System.out.print("Name: ");
+        String learnerName = scanner.next();
+        
+        
+        System.out.print("Gender: ");
+        String learnerGender = scanner.next();
+        
+        
+        System.out.print("Age: ");
+        int learnerAge = Integer.parseInt(scanner.next());
+
+        System.out.print("Emergency Contact: ");
+        String emergencyContact = scanner.next();
+
+        
+        
+        System.out.print("Grade Level: ");
+        int gradeLevel = Integer.parseInt(scanner.next());
+
+        // Create a new learner with the entered details
+        swimmingSchool.addNewLearner(learnerName, learnerGender, learnerAge, emergencyContact, gradeLevel);
+        // Find the learner by name
+        Learner learner = swimmingSchool.findLearnerByName(learnerName);
+
+       
+
+        System.out.print("Enter the day of the lesson: ");
+        String lessonDay = scanner.next();
+
+        // Find the lesson by day
+        Lesson lesson = swimmingSchool.findLessonByDay(lessonDay);
+
+
+
+        // Book the lesson for the learner
+        swimmingSchool.bookLesson(learner, lesson);
+        System.out.println("Lesson booked successfully!");
+
+        System.out.println("\nOptions:");
+        // ... existing options ...
+        System.out.println("7. View ratings for a lesson");
+        // Display updated timetable
+      
+    }}
