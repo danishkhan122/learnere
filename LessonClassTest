@@ -1,0 +1,23 @@
+package HatfieldJuniorSwimmingSchool;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+class LessonTest {
+
+    @Test
+    void testGetAverageRating() {
+        // Create a lesson object
+        Lesson lesson = new Lesson();
+        
+        // Add some ratings
+        lesson.addRating(4);
+        lesson.addRating(5);
+        lesson.addRating(3);
+        
+        // Calculate average rating
+        double averageRating = lesson.getAverageRating();
+        
+        // Check if average rating is calculated correctly
+        assertEquals(4.0, averageRating);
+    }
+}
