@@ -1,0 +1,33 @@
+package HatfieldJuniorSwimmingSchool;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Learnerr {
+    private String name;
+    private String gender;
+    private int age;
+    private String emergencyContact;
+    private int currentGrade;
+    private List<Boooking> bookings;
+
+    public Learnerr(String name, String gender, int age, String emergencyContact, int currentGrade) {
+        this.name = name;
+        this.gender = gender;
+        this.age = age;
+        this.emergencyContact = emergencyContact;
+        this.currentGrade = currentGrade;
+        this.bookings = new ArrayList<>();
+    }
+
+    // Getter methods
+    public List<Boooking> getBookings() {
+        return bookings;
+    }
+
+    // Method to add a booking
+    public void addBoooking(Boooking booking) {
+        bookings.add(booking);
+    }
+}
+
