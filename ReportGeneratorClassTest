@@ -1,0 +1,29 @@
+package HatfieldJuniorSwimmingSchool;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+
+class ReportGeneratorTest {
+
+    @Test
+    void testGenerateLearnerReport() {
+        // Create a list of learners
+        List<Learner> learners = new ArrayList<>();
+        Learner learner1 = new Learner();
+        learner1.setName("John Doe");
+        learners.add(learner1);
+        
+        // Create a list of lessons
+        List<Lesson> timetable = new ArrayList<>();
+        Lesson lesson1 = new Lesson();
+        lesson1.bookLearner(learner1); // Book the learner for the lesson
+        timetable.add(lesson1);
+        
+        // Generate learner report
+       
+    }
+}
+
+
