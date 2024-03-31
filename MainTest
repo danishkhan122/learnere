@@ -1,0 +1,30 @@
+package HatfieldJuniorSwimmingSchool;
+
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.PrintStream;
+
+class MainTest {
+
+    @Test
+    void testMain() {
+        // Redirect standard input and output streams
+        String userInput = "1\nJohn Doe\nMale\n8\n123-456-7890\n1\nMonday\n11\n"; // Input for booking a lesson and then exiting
+        InputStream inputStream = new ByteArrayInputStream(userInput.getBytes());
+        System.setIn(inputStream);
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        System.setOut(new PrintStream(outputStream));
+
+        // Call the main method
+        Main.main(new String[]{});
+
+        // Verify the output
+        String expectedOutput = "\nOptions:\n1. Book a lesson\n2. View timetable by day\n3. View timetable by grade\n4. View timetable by coach\n5. Submit a review\n6. View ratings for a lesson\n7. Change/Cancel a booking\n8. Attend a swimming lesson\n9. Monthly learner report\n10. Monthly coach report\n11. Exit\nEnter your choice: Enter learner details: Name: Gender: Age: Emergency Contact: Grade Level: Enter the day of the lesson: Lesson booked successfully!\nOptions:\n1. Book a lesson\n2. View timetable by day\n3. View timetable by grade\n4. View timetable by coach\n5. Submit a review\n6. View ratings for a lesson\n7. Change/Cancel a booking\n8. Attend a swimming lesson\n9. Monthly learner report\n10. Monthly coach report\n11. Exit\nExiting program. Goodbye!\n";
+        assertEquals(expectedOutput, outputStream.toString());
+    }
+}
