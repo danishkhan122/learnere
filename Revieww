@@ -1,0 +1,13 @@
+package HatfieldJuniorSwimmingSchool;
+
+public class Revieww {
+    private String comment;
+    private int rating;
+
+    public Revieww(String comment, int rating) {
+        this.comment = comment;
+        this.rating = rating;
+    }
+
+    // Getter methods
+}
